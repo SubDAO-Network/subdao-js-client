@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@polkadot/api": "^5.4.1",
+    "@polkadot/api-contract": "^5.4.1",
+    "commander": "^8.1.0",
+    "pkg": "^5.3.1"
+  }
+}
