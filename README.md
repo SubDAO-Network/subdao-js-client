@@ -29,6 +29,14 @@ node ./main.js
 -a /Users/xxx/subdao.com/subDAO-contracts/release/air_drop_v0.1.json 
 -l ./demo.json
 ```
+
+```
+ts-node main.ts 
+-ws 127.0.0.1:9944 
+-c 5Cj8xYu9GrXckNaXbAeH56CVje2AB47YgDVNMa4AhXio4bEe
+-a /Users/subdao/Workspace/subdao.com/tests/contract/deploy_air_drop/artifacts/air_drop.json 
+-l ./test_airDropList.csv
+```
 输出:
 ```
 You are connected to chain Development using Europa Dev Node v0.3.2-f6da65d-aarch64-macos

@@ -74,40 +74,15 @@ async function main () {
         api.rpc.system.chain(),
         api.rpc.system.name(),
         api.rpc.system.version()
-      ]);
+    ]);
     
-      console.log(`You are connected to chain ${chain} using ${nodeName} v${nodeVersion}`);
+    console.log(`You are connected to chain ${chain} using ${nodeName} v${nodeVersion}`);
     
     // 调用合约方法的默认值
     const value = 0;
     const gasLimit = -1;
     
-/* 
-    redpacket 
-*/
-/*
-    const redPctABI = JSON.parse(redPctRawData);
-    // console.log(`${redPctABI}`);
 
-    let contract = initContractProvider(api, redPctABI, redpacketContractAddress);
-
-    // TODO: 查询当前红包数(需由合约方法支持)
-    // 此处通过遍历，获取红包id
-    // print claim list
-    var redpacketId = 1;
-    while (true) {
-        const callValue = await contract.query.checkRedPacket(aliceAddress, { value, gasLimit }, redpacketId); 
-
-        if (!callValue.result['isOk']) {
-            console.log(`the redpacket id has been traversed, there are num ${redpacketId - 1} in total.`);
-            break
-        } else {
-            const claimList = callValue.output['claim_list'].toJSON()
-            console.log(`the redpacket id is ${redpacketId}, its claim list is ${claimList}.`, );
-        }
-        redpacketId += 1;
-    };
-*/
 /*
     erc20
 */
@@ -122,10 +97,12 @@ async function main () {
 /*
     air_drop
 */  
-    // TODO: read air_drop address list
+    // TODO: read air_drop address list from csv file
     //let airDropAddr = new Array([bobAddress, 40], [charlieAdrr, 30], [daveAddr, 20], [eveAddr, 10])
     // let airDropAddr = new Array([bobAddress, 40000]);
     //let airDropAddr = new Array([aliceAddress, 100000]);
+    
+    
     const airDropRawData = fs.readFileSync(abiPath);
     const airDropABI = JSON.parse(airDropRawData);
     contract = initContractProvider(api, airDropABI, contractAddress);
@@ -134,9 +111,10 @@ async function main () {
 
     //callValue = await contract.tx.invokeList({value, gasLimit}, "erc20", addrListArr).signAndSend(alice);
     await contract.tx.invokeList({value, gasLimit}, "erc20", addrListArr).signAndSend(alice, (result) => {
-        console.log(result.status)
+        if (result.status.isInBlock()) {
+            console.log('test title');
+        }
     });
-
 }
 
 main().catch(console.error).finally(() => process.exit());
@@ -149,12 +127,10 @@ function initContractProvider(api, abi, address) {
 function Uint8ArrayToString(fileData){
     var dataString = "";
     for (var i = 0; i < fileData.length; i++) {
-      dataString += String.fromCharCode(fileData[i]);
+        dataString += String.fromCharCode(fileData[i]);
     }
-   
     return dataString
-  
-  }
+}
 
 
 function objectValueArrToArr(object) {
