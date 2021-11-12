@@ -1,0 +1,4 @@
+[network]
+websocket_address= "ws://localhost:9944"
+contract_address = "5Cj8xYu9GrXckNaXbAeH56CVje2AB47YgDVNMa4AhXio4bEe"
+abi_path = "/Users/subdao/Workspace/subdao.com/tests/contract/deploy_air_drop/artifacts/air_drop.json"

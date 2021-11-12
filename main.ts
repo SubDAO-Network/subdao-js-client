@@ -2,33 +2,35 @@ import { ApiPromise, WsProvider } from '@polkadot/api';
 import { ContractPromise } from '@polkadot/api-contract';
 import { Keyring } from '@polkadot/keyring';
 import { Command } from 'commander';
+import * as toml from 'toml';
 import * as fs from 'fs';
 
 import { readCsvLine } from "./utils";
+import { loadConfig } from './config';
 
 // termainl command value
 const program = new Command();
 
-let nodeAddr: string;
-let contractAddr: string;
-let abiPath: string;
 let airDropList: Array<any>;
 
 async function main() {
+    // load config file of network
+    const config = loadConfig('./network.toml');
+
     // TODO: terminal command
     program
         .description('A tool for airdrop to subdao project.')
-            .requiredOption('-ws, --websocketAddress <type>', 'The address of the blockchain node that needs to be interacted.')
-            .requiredOption('-c, --contractAddress <type>', 'The address of contract that needs to be interacted.')
-            .requiredOption('-a, --abiPath <type>', 'The abi file path of the contradt that needs to be interacted.')
+            // .requiredOption('-ws, --websocketAddress <type>', 'The address of the blockchain node that needs to be interacted.')
+            // .requiredOption('-c, --contractAddress <type>', 'The address of contract that needs to be interacted.')
+            // .requiredOption('-a, --abiPath <type>', 'The abi file path of the contradt that needs to be interacted.')
             .requiredOption('-l, --listPath <type>', 'The list path of addresses to airdrop.');
     program.parse();    
 
     const options = program.opts();
-    if (options.websocketAddress && options.contractAddress && options.abiPath && options.listPath) {
-        nodeAddr = options.websocketAddress;
-        contractAddr = options.contractAddress;
-        abiPath = options.abiPath;
+    if (options.listPath) {
+        // nodeAddr = config.websocketAddress;
+        // contractAddr = config.contractAddress;
+        // abiPath = config.abiPath;
         let filePath = options.listPath
 
         //TODO: read csv file
@@ -37,7 +39,7 @@ async function main() {
     }
 
     //TODO: init polkadot api client
-    const provider = new WsProvider('ws://' + nodeAddr);
+    const provider = new WsProvider(config.websocketAddress);
     const api = await ApiPromise.create({ provider });
 
     const keyring = new Keyring({ type: 'sr25519' });
@@ -57,13 +59,12 @@ async function main() {
     const value = 0;
     const gasLimit = -1;
 
-    const airDropRawData = fs.readFileSync(abiPath).toString();
+    const airDropRawData = fs.readFileSync(config.abiPath).toString();
     const airDropABI = JSON.parse(airDropRawData);
-    const contract = new ContractPromise(api, airDropABI, contractAddr); 
+    const contract = new ContractPromise(api, airDropABI, config.contractAddress); 
     
     // await contract.tx.registerTokenStandardIns({value, gasLimit}, "5CiNowLBUcdw5GQmjE7vwntgGSCqe6S5jXRoRYo4gbr1W3my").signAndSend(alice);
     let callback = await contract.tx.actionAll({value, gasLimit}, airDropList).signAndSend(alice);
-    console.log(callback);
-
+    // console.log(callback);
 }
 main().catch(console.error).finally(() => process.exit());
