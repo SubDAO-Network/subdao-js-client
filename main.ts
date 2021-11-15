@@ -43,8 +43,11 @@ async function main() {
     const api = await ApiPromise.create({ provider });
 
     const keyring = new Keyring({ type: 'sr25519' });
-    const alice = keyring.addFromUri('//Alice');
-    const bob = keyring.addFromUri('//Bob');
+    const userIdentity = JSON.parse(config.userIdentityAsStr);
+    // console.log(userIdentity)
+    const user = keyring.addFromJson(userIdentity);
+    // console.log(`alice address: ${alice.address}`);
+    user.unlock(config.unlockPassword);
 
     // system node info
     const [chain, nodeName, nodeVersion] = await Promise.all([
@@ -64,7 +67,7 @@ async function main() {
     const contract = new ContractPromise(api, airDropABI, config.contractAddress); 
     
     // await contract.tx.registerTokenStandardIns({value, gasLimit}, "5CiNowLBUcdw5GQmjE7vwntgGSCqe6S5jXRoRYo4gbr1W3my").signAndSend(alice);
-    let callback = await contract.tx.actionAll({value, gasLimit}, airDropList).signAndSend(alice);
-    // console.log(callback);
+    const callValue = await contract.tx.actionAll({value, gasLimit}, airDropList).signAndSend(user);
+    console.log(`The Hash of call: ${JSON.stringify(callValue)}`);
 }
 main().catch(console.error).finally(() => process.exit());

@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "@polkadot/api": "^5.4.1",
-    "@polkadot/api-contract": "^5.4.1",
-    "commander": "^8.1.0",
+    "@polkadot/api": "^6.8.1",
+    "@polkadot/api-contract": "^6.8.1",
+    "commander": "^8.3.0",
     "toml": "^3.0.0",
     "ts-node": "^10.4.0"
   }

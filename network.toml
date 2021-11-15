@@ -1,3 +1,7 @@
+[user]
+user_identity_json_file_path = "/Users/subdao/Documents/workspace/subdao/wallet/5EquzD21eniSw6xbLAqo58oSZAhamKJ58U869WeqUZLqriJ5.json"
+unlock_password = "subdao123456"
+
 [network]
 websocket_address= "ws://localhost:9944"
 contract_address = "5Cj8xYu9GrXckNaXbAeH56CVje2AB47YgDVNMa4AhXio4bEe"
