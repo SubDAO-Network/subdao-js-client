@@ -2,7 +2,6 @@ import { ApiPromise, WsProvider } from '@polkadot/api';
 import { ContractPromise } from '@polkadot/api-contract';
 import { Keyring } from '@polkadot/keyring';
 import { Command } from 'commander';
-import * as toml from 'toml';
 import * as fs from 'fs';
 
 import { readCsvLine } from "./utils";
@@ -58,7 +57,7 @@ async function main() {
     
     console.log(`You are connected to chain ${chain} using ${nodeName} v${nodeVersion}`);
     
-    // 调用合约方法的默认值
+    // default value 
     const value = 0;
     const gasLimit = -1;
 
@@ -66,7 +65,6 @@ async function main() {
     const airDropABI = JSON.parse(airDropRawData);
     const contract = new ContractPromise(api, airDropABI, config.contractAddress); 
     
-    // await contract.tx.registerTokenStandardIns({value, gasLimit}, "5CiNowLBUcdw5GQmjE7vwntgGSCqe6S5jXRoRYo4gbr1W3my").signAndSend(alice);
     const callValue = await contract.tx.actionAll({value, gasLimit}, airDropList).signAndSend(user);
     console.log(`The Hash of call: ${JSON.stringify(callValue)}`);
 }
